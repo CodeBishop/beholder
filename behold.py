@@ -65,6 +65,11 @@ def getRunningServiceList(appId):
 
     return serviceNames
 
+# Get the output from a terminal command and block any error messages from appearing.
+def terminalCommand(command):
+    output, _ = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=DEVNULL).communicate()
+    return output
+
 
 ############################################################################################
 #   curses_utils.py   ######################################################################
