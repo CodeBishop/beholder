@@ -26,11 +26,17 @@
 INSTALLATION
 sudo ln -s <path to this python script> /usr/local/bin/behold
 
+USAGE
+behold <package name>
+
 '''
 
 import subprocess
 import sys
 
+######################################################################################################
+#   Info-fetching Functions   ########################################################################
+######################################################################################################
 def getRunningServiceList(appId):
     # Execute command and get results into array of strings
     command = 'adb shell dumpsys activity services'
@@ -57,6 +63,9 @@ def getRunningServiceList(appId):
     return serviceNames
 
 
+######################################################################################################
+#   Main   ###########################################################################################
+######################################################################################################
 if (len(sys.argv) < 2):
     print("Usage: behold package-name")
 else:
