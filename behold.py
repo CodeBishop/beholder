@@ -36,16 +36,39 @@ import curses
 import subprocess
 import sys
 import time
+from async_command import AsyncCommand
 
 ############################################################################################
 #   read_adb.py   ##########################################################################
 ############################################################################################
+# TODO: Delete this function?
 def getRunningServiceList(appId):
     # Execute command and get results into array of strings
     command = 'adb shell dumpsys activity services'
     process = subprocess.Popen(command.split(' '), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     output = process.stdout.readlines()
 
+    # Strip out newlines
+    for i in range(len(output)):
+        output[i] = output[i].strip()
+
+    # Filter out everything but the active ServiceRecords for the specified app
+    filteredOutput = []
+    for line in output:
+        if '* ServiceRecord' in line and appId in line:
+            filteredOutput.append(line)
+
+    # Strip the ServiceRecord lines down to just the last part of the Service identifier
+    serviceNames = []
+    for line in filteredOutput:
+        # Take last part of Service identifier and truncate final char (should be a close brace)
+        # TODO: Rewrite this as a regex
+        serviceNames.append(line.split('.')[-1][:-1])
+
+    return serviceNames
+
+def interpretRunningServiceList(commandOutput, appId):
+    output = commandOutput.split('\n')
     # Strip out newlines
     for i in range(len(output)):
         output[i] = output[i].strip()
@@ -186,6 +209,8 @@ def cursesMain(screen):
 
     curses.curs_set(0) # Hide the cursor
 
+    servicesExec = AsyncCommand('adb shell dumpsys activity services')
+
     exitFlag = False
     while not exitFlag:
         # Clear the screen
@@ -193,9 +218,10 @@ def cursesMain(screen):
         screen.border(0)
 
         # Draw the view
-        printAt(3, 0, BLUE + PROGRAM_TITLE)
-        # serviceInfo = getRunningServiceList(sys.argv[1])
-        # printAt(2, 2, serviceInfo[0])
+        printAt(3, 0, BLUE + PROGRAM_TITLE + ' - ' + appId)
+        if servicesExec.isFinished():
+            serviceList = interpretRunningServiceList(servicesExec.getResult(), appId)
+            printAt(2, 2, 'Services: [' + ', '.join(serviceList) + ']')
 
         screen.refresh() # Update the view
 
@@ -209,8 +235,13 @@ def cursesMain(screen):
 ############################################################################################
 #   Start of Program    ####################################################################
 ############################################################################################
+appId = ""
+
 if (len(sys.argv) < 2):
-    print("Usage: behold package-name")
+    print("Usage: behold <package-name>")
+else:
+    appId = sys.argv[1]
+
 
 # TODO: Make this conditional on valid CLI args
 curses.wrapper(cursesMain)

@@ -16,27 +16,25 @@ class AsyncCommand:
         self.proc = Popen(self.command, stdout=PIPE, bufsize=1, close_fds=ON_POSIX)
         self.queue = Queue()
         self.result = ""
-        self.cmdThread = Thread(target=self.enqueue_output, args=(self.proc.stdout, self.queue))
+        self.cmdThread = Thread(target=self._enqueueOutput, args=(self.proc.stdout, self.queue))
         self.cmdThread.daemon = True # thread dies with the program
         self.cmdThread.start()
 
         while self.state != STOPPED:
-            # read line without blocking
             try:
-                line = self.queue.get_nowait() # or q.get(timeout=.1)
+                line = self.queue.get_nowait()
             except Empty:
                 if self.state == RUNNING:
                     self.state = STOPPED
-                    print("Command has stopped")
                 else:
                     time.sleep(0.1)
             else: # got line
                 if self.state == PENDING:
                     self.state = RUNNING
-                    print("Command has started returning results")
                 self.result += line.decode('utf-8')
 
-    def enqueue_output(self, out, queue):
+    # Worker thread function for fetching lines of command output
+    def _enqueueOutput(self, out, queue):
         for line in iter(out.readline, b''):
             queue.put(line)
         out.close()
