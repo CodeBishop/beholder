@@ -218,10 +218,11 @@ def cursesMain(screen):
         screen.border(0)
 
         # Draw the view
-        printAt(3, 0, BLUE + PROGRAM_TITLE + ' - ' + appId)
-        if servicesExec.isFinished():
-            serviceList = interpretRunningServiceList(servicesExec.getResult(), appId)
-            printAt(2, 2, 'Services: [' + ', '.join(serviceList) + ']')
+        printAt(3, 0, ' ' + BLUE + PROGRAM_TITLE + ' - ' + appId + ' ')
+        serviceList = interpretRunningServiceList(servicesExec.getResult(), appId)
+        printAt(2, 2, 'Services: [' + ', '.join(serviceList) + ']')
+        # if servicesExec.isStopped():
+        #     servicesExec.run()
 
         screen.refresh() # Update the view
 
@@ -230,7 +231,7 @@ def cursesMain(screen):
         if keypress in [ord('q'), ord('Q')]:
             exitFlag = True
 
-    time.sleep(0.1)  # Sleep for this many seconds to reduce CPU load
+    time.sleep(0.5)  # Sleep for this many seconds to reduce CPU load
 
 ############################################################################################
 #   Start of Program    ####################################################################

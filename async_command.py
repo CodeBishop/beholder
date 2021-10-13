@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 from subprocess import PIPE, Popen
@@ -12,13 +13,25 @@ ON_POSIX = 'posix' in sys.builtin_module_names
 class AsyncCommand:
     def __init__(self, command, executeNow=True):
         self.command = command.split()
-        self.state = PENDING
-        self.proc = Popen(self.command, stdout=PIPE, bufsize=1, close_fds=ON_POSIX)
-        self.queue = Queue()
+        self.state = STOPPED
         self.result = ""
-        self.cmdThread = Thread(target=self._enqueueOutput, args=(self.proc.stdout, self.queue))
-        self.cmdThread.daemon = True # thread dies with the program
-        self.cmdThread.start()
+        self.proc = None
+        self.queue = None
+        self.cmdThread = None
+        # Open the null device for dumping unwanted output into.
+        self.devnull = open(os.devnull, 'w')
+
+        if executeNow:
+            self.run()
+
+    def run(self):
+        if self.state == STOPPED:
+            self.state = PENDING
+            self.proc = Popen(self.command, stdout=PIPE,  stderr=self.devnull, bufsize=1, close_fds=ON_POSIX)
+            self.queue = Queue()
+            self.cmdThread = Thread(target=self._enqueueOutput, args=(self.proc.stdout, self.queue))
+            self.cmdThread.daemon = True # thread dies with the program
+            self.cmdThread.start()
 
         while self.state != STOPPED:
             try:
@@ -39,15 +52,8 @@ class AsyncCommand:
             queue.put(line)
         out.close()
 
-    def isFinished(self):
+    def isStopped(self):
         return self.state == STOPPED
 
     def getResult(self):
         return self.result
-
-servicesExec = AsyncCommand('adb shell dumpsys activity services')
-
-while(servicesExec.isFinished == False):
-    time.sleep(0.2)
-
-# print(servicesExec.getResult())
