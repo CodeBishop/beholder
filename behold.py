@@ -28,7 +28,7 @@ cd beholder
 sudo ln -s ~+/behold.py /usr/local/bin/behold
 
 USAGE
-behold <package name>
+behold <package-name>
 
 '''
 
@@ -221,8 +221,8 @@ def cursesMain(screen):
         printAt(3, 0, ' ' + BLUE + PROGRAM_TITLE + ' - ' + appId + ' ')
         serviceList = interpretRunningServiceList(servicesExec.getResult(), appId)
         printAt(2, 2, 'Services: [' + ', '.join(serviceList) + ']')
-        # if servicesExec.isStopped():
-        #     servicesExec.run()
+        if servicesExec.isStopped():
+            servicesExec.run()
 
         screen.refresh() # Update the view
 

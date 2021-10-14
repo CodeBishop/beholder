@@ -27,7 +27,8 @@ class AsyncCommand:
     def run(self):
         if self.state == STOPPED:
             self.state = PENDING
-            self.proc = Popen(self.command, stdout=PIPE,  stderr=self.devnull, bufsize=1, close_fds=ON_POSIX)
+            self.result = "" # Reset
+            self.proc = Popen(self.command, stdout=PIPE,  stderr=self.devnull, close_fds=ON_POSIX)
             self.queue = Queue()
             self.cmdThread = Thread(target=self._enqueueOutput, args=(self.proc.stdout, self.queue))
             self.cmdThread.daemon = True # thread dies with the program
