@@ -1,8 +1,7 @@
 def interpretProcessInfo(commandOutput, appId):
     processDict = interpretProcessInfoIntoDict(commandOutput, appId)
     if processDict != None:
-        return "PID: " + processDict['pid'] + "   runTime: " + processDict['runTime'] + "   Command: " + processDict['cmd']
-    return None
+        return processDict['cmd'] + " (pid " + processDict['pid'] + ")   " + processDict['runTime'] + "   Nice: " + processDict['nice']
 
 def interpretProcessInfoIntoDict(commandOutput, appId):
     processDict = {}
@@ -10,6 +9,7 @@ def interpretProcessInfoIntoDict(commandOutput, appId):
         if line.find(appId) != -1:
             values = [s for s in line.split()]
             processDict['pid'] = values[3]
+            processDict['nice'] = values[7]
             processDict['runTime'] = values[12]
             processDict['cmd'] = values[13]
             return processDict
