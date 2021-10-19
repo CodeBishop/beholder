@@ -32,6 +32,7 @@ behold <package-name>
 
 '''
 
+import json
 import subprocess
 import sys
 import time
@@ -61,20 +62,38 @@ def cursesMain(screen):
 
     curses.curs_set(0) # Hide the cursor
 
+    processExec = AsyncCommand('adb shell ps -wel')
+    activityExec = AsyncCommand('adb shell dumpsys activity ' + appId)
     servicesExec = AsyncCommand('adb shell dumpsys activity services')
 
+    processInfo = ""
+    activityInfo = ""
+    serviceList = ""
     exitFlag = False
     while not exitFlag:
+        # Update info
+        if processExec.isStopped():
+            processExec.run()
+            # Don't overwrite processInfo until it's confirmed that it was found  TODO: Find out why it's sometimes not found. Is `ps -wel` failing half the time?
+            newProcessInfo = interpretProcessInfo(processExec.getResult(), appId)
+            if newProcessInfo != None:
+                processInfo = newProcessInfo
+        if activityExec.isStopped():
+            activityExec.run()
+            activityInfo = interpretActivityInfo(activityExec.getResult(), appId)
+        if servicesExec.isStopped():
+            servicesExec.run()
+            serviceList = interpretRunningServiceList(servicesExec.getResult(), appId)
+
         # Clear the screen
         screen.erase()
         screen.border(0)
 
         # Draw the view
         printAt(3, 0, ' ' + BLUE + PROGRAM_TITLE + ' - ' + appId + ' ')
-        serviceList = interpretRunningServiceList(servicesExec.getResult(), appId)
-        printAt(2, 2, 'Services: [' + ', '.join(serviceList) + ']')
-        if servicesExec.isStopped():
-            servicesExec.run()
+        printAt(2, 2, 'Process: ' + json.dumps(processInfo))
+        printAt(2, 3, 'Services: [ ' + ', '.join(serviceList) + ' ]')
+        printAt(2, 4, 'Activity: ' + activityInfo)
 
         screen.refresh() # Update the view
 

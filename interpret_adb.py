@@ -1,3 +1,15 @@
+def interpretProcessInfo(commandOutput, appId):
+    processDict = {}
+    for line in commandOutput.split('\n'):
+        if line.find(appId) != -1:
+            values = [s for s in line.split()]
+            processDict['pid'] = values[3]
+            return processDict
+    return None
+    return "Process not found for " + appId
+
+def interpretActivityInfo(commandOutput, appId):
+    return "hello"
 
 def interpretRunningServiceList(commandOutput, appId):
     output = commandOutput.split('\n')
