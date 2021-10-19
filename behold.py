@@ -91,7 +91,7 @@ def cursesMain(screen):
 
         # Draw the view
         printAt(3, 0, ' ' + BLUE + PROGRAM_TITLE + ' - ' + appId + ' ')
-        printAt(2, 2, 'Process: ' + json.dumps(processInfo))
+        printAt(2, 2, 'Process: ' + processInfo)
         printAt(2, 3, 'Services: [ ' + ', '.join(serviceList) + ' ]')
         printAt(2, 4, 'Activity: ' + activityInfo)
 
