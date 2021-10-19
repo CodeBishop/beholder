@@ -1,9 +1,12 @@
 def interpretProcessInfo(commandOutput, appId):
+    '''Takes in the output of a `ps -wel` and a process name, returns a string describing that process or None if the process was not found'''
     processDict = interpretProcessInfoIntoDict(commandOutput, appId)
     if processDict != None:
         return processDict['cmd'] + " (pid " + processDict['pid'] + ")   " + processDict['runTime'] + "   Nice: " + processDict['nice']
+    return None
 
 def interpretProcessInfoIntoDict(commandOutput, appId):
+    '''Takes in the output of a `ps -wel` and a process name, returns a dictionary of info about that process or None if the process was not found'''
     processDict = {}
     for line in commandOutput.split('\n'):
         if line.find(appId) != -1:
@@ -14,12 +17,13 @@ def interpretProcessInfoIntoDict(commandOutput, appId):
             processDict['cmd'] = values[13]
             return processDict
     return None
-    return "Process not found for " + appId
 
 def interpretActivityInfo(commandOutput, appId):
+    '''Takes in the output of a `dumpsys activity <appId>` and an application ID, returns a string describing that app's Activity'''
     return "hello"
 
 def interpretRunningServiceList(commandOutput, appId):
+    '''Takes in the output of a `dumpsys activity services <appId>` and an application ID, returns a list of strings naming all the Android services that app is running'''
     output = commandOutput.split('\n')
     # Strip out newlines
     for i in range(len(output)):
