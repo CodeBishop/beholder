@@ -1,3 +1,5 @@
+import re
+
 def interpretProcessInfo(commandOutput, appId):
     '''Takes in the output of a `ps -wel` and a process name, returns a string describing that process or None if the process was not found'''
     processDict = interpretProcessInfoIntoDict(commandOutput, appId)
@@ -20,6 +22,36 @@ def interpretProcessInfoIntoDict(commandOutput, appId):
 
 def interpretActivityInfo(commandOutput, appId):
     '''Takes in the output of a `dumpsys activity <appId>` and an application ID, returns a string describing that app's Activity'''
+    activityDict = {}
+    for line in commandOutput.split('\n'):
+        if 'ACTIVITY' in line:
+            activityDict['activityName'] = line.split()[1]
+            activityDict['pidInfo'] = line.split()[3]
+        if 'mResumed' in line:
+            flagEntries = line.split()
+            activityDict['resumedFlag'] = 'true' in flagEntries[0]
+            activityDict['stoppedFlag'] = 'true' in flagEntries[1]
+            activityDict['finishedFlag'] = 'true' in flagEntries[2]
+        if 'mLastFrameTime' in line:
+            activityDict['timeSinceLastRender'] = re.search(r"\b.*(\b\d+) ms ago\)", line).group(1)
+    if activityDict != {}:
+        activityString = ""
+        activityString += activityDict['activityName'] + " (" + activityDict['pidInfo'] + ")"
+        if 'timeSinceLastRender' in activityDict.keys() and activityDict['timeSinceLastRender'] != None:
+            activityString += "   updated " + activityDict['timeSinceLastRender'] + " ms ago"
+        activityString += "   state: "
+        if 'resumedFlag' in activityDict.keys() and activityDict['resumedFlag']:
+            activityString += "foreground  "
+        if 'stoppedFlag' in activityDict.keys() and activityDict['stoppedFlag']:
+            activityString += "stopped  "
+        if 'finishedFlag' in activityDict.keys() and activityDict['finishedFlag']:
+            activityString += "finished  "
+        return activityString
+    return ""
+
+    '''Replaces this command:
+            hero deaths % watch -n 0.3 'adb shell dumpsys activity <appId> | grep -E "mResumed|astFrameT|hasService|ebView|CTIVITY"'
+    '''
     return "hello"
 
 def interpretRunningServiceList(commandOutput, appId):
