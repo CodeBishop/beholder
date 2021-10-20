@@ -32,6 +32,8 @@ behold <package-name>
 
 '''
 
+# TODO: Fix the printAt() function. It skips printing if the line is longer than the window.
+
 import json
 import subprocess
 import sys
