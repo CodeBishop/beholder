@@ -54,7 +54,7 @@ def cutToEllipsis(text, maxLength):
     else:
         return text
 
-# Print
+# Print at a cursor position with the option of cropping to a given length
 def printAt(x, y, text, length=-1):
     # Get current window dimensions and clip them for border
     windowHeight, windowWidth = utilsWindow.getmaxyx()
@@ -66,13 +66,14 @@ def printAt(x, y, text, length=-1):
     if x < 0 or y < 0 or x >= windowWidth or y >= windowHeight:
         return
 
-    # If the string won't fit on screen then don't draw it
-    if x + CECStringLength(text) >= windowWidth:
-        return
-
-    # If string needs to fit a given length then cut it
+    # If string needs to fit a given length then crop it
     if length > -1:
         text = cutToEllipsis(text, length)
+
+    # If the string won't fit on screen then crop it
+    if x + CECStringLength(text) >= windowWidth:
+        text = cutToEllipsis(text, windowWidth - x)
+        utilsWindow.addstr(10,10,str())
 
     # Split the string by color-escape codes into a list of string portions
     strings = text.split(CEC)
