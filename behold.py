@@ -110,11 +110,45 @@ def cursesMain(screen):
 #   Start of Program    ####################################################################
 ############################################################################################
 appId = ""
+appIdSearchString = ""
 
 if (len(sys.argv) < 2):
-    print("Usage: behold <package-name>")
+    print("Usage: behold <package-name-pattern>")
 else:
-    appId = sys.argv[1]
+    appIdSearchString = sys.argv[1]
 
-# TODO: Make this conditional on valid CLI args
+# Get full package name and confirm that only one package name matches
+packageListExec = AsyncCommand('adb shell pm list packages')
+timeoutAfterTries = 5
+tries = 0
+exitFlag = False
+while not exitFlag:
+    # When the package list has loaded, get the package name
+    if packageListExec.isStopped():
+        packageList = packageListExec.getResult().split()
+        matchingPackages = [packageEntry for packageEntry in packageList if appIdSearchString in packageEntry]
+
+        # Ensure that exactly one package name matches the pattern given by the user
+        if len(matchingPackages) == 1:
+            # Extract the package name from the package entry. The package entry is of the form: package:com.example.app
+            appId = re.findall(r'([a-zA-Z.]*\.+[a-zA-Z]*)', matchingPackages[0])[0]
+        elif len(matchingPackages) > 1:
+            print("More than one package matches the pattern: " + appIdSearchString)
+            for matchingPackage in matchingPackages:
+                print(re.findall(r'([a-zA-Z.]*\.+[a-zA-Z]*)', matchingPackage))
+            sys.exit(1)
+        else:
+            print("No packages match the given pattern.")
+            sys.exit(1)
+        exitFlag = True
+    else:
+        tries += 1
+        print("TRYING")
+
+        if tries >= timeoutAfterTries:
+            print("Could not find package name matching pattern '" + appIdSearchString + "'")
+            sys.exit(1)
+        else:
+            time.sleep(0.1)  # Sleep for this many seconds before checking again
+
 curses.wrapper(cursesMain)
