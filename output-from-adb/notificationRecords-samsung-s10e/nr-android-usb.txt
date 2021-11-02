@@ -1,0 +1,60 @@
+    NotificationRecord(0x00ebc7c8: pkg=android user=UserHandle{-1} id=27 tag=null importance=1 key=-1|android|27|null|1000: Notification(channel=USB shortcut=null contentView=null vibrate=null sound=null tick defaults=0x0 flags=0x2 color=0xff888fa2 vis=PUBLIC semFlags=0x0 semPriority=0 semMissedCount=0))
+      uid=1000 userId=-1
+      opPkg=android
+      icon=Icon(typ=RESOURCE pkg=android id=0x01080a08)
+      flags=0x2
+      pri=0
+      key=-1|android|27|null|1000
+      seen=true
+      groupKey=-1|android|27|null|1000
+      fullscreenIntent=null
+      contentIntent=PendingIntent{58b046b: PendingIntentRecord{43bd3e7 android startActivity}}
+      deleteIntent=null
+      number=0
+      groupAlertBehavior=0
+      when=0
+      tickerText=USB for file transfer
+      contentView=null
+      bigContentView=null
+      headsUpContentView=null
+      color=0xff888fa2      timeout=unknown
+      parcelDataSize=1460
+      extras={
+          android.title=String (USB for file transfer)
+          android.reduced.images=Boolean (true)
+          android.text=String (Tap for other USB options.)
+          android.appInfo=ApplicationInfo (ApplicationInfo{d4babc8 android})
+      }
+      stats=SingleNotificationStats{posttimeElapsedMs=4289471, posttimeToFirstClickMs=-1, posttimeToDismissMs=-1, airtimeCount=10, airtimeMs=218194, currentAirtimeStartElapsedMs=4607149, airtimeExpandedMs=0, posttimeToFirstVisibleExpansionMs=-1, currentAirtimeExpandedStartElapsedMs=-1, requestedImportance=3, naturalImportance=1, isNoisy=true}
+      mContactAffinity=0.0
+      mRecentlyIntrusive=false
+      mPackagePriority=0
+      mPackageVisibility=-1000
+      mSystemImportance=UNSPECIFIED
+      mAsstImportance=UNSPECIFIED
+      mImportance=MIN
+      mImportanceExplanation=app
+      mIsAppImportanceLocked=false
+      mIntercept=false
+      mHidden==false
+      mGlobalSortKey=crtcl=0x0002:intrsv=1:grnk=0x0003:gsmry=1:nsk:rnk=0x0003
+      mRankingTimeMs=1635801162212(2021-11-01 14:12:42.212-0700)
+      mCreationTimeMs=1635801162212(2021-11-01 14:12:42.212-0700)
+      mVisibleSinceMs=1635801480092(2021-11-01 14:18:00.092-0700)
+      mUpdateTimeMs=1635801162212(2021-11-01 14:12:42.212-0700)
+      mInterruptionTimeMs=1635801162414(2021-11-01 14:12:42.414-0700)
+      mSuppressedVisualEffects= 0
+      mSound= content://settings/system/notification_sound
+      mVibration= null
+      mAttributes= AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null
+      mLight= null
+      mShowBadge=false
+      mColorized=false
+      mAllowBubble=false
+      isBubble=false
+      mIsInterruptive=true
+      effectiveNotificationChannel=NotificationChannel{mId='USB', mName=USB connection, mDescription=, mImportance=1, mBypassDnd=false, mLockscreenVisibility=-1000, mSound=content://settings/system/notification_sound, mLights=false, mLightColor=0, mVibration=null, mUserLockedFields=0, mFgServiceShown=false, mVibrationEnabled=false, mShowBadge=true, mDeleted=false, mGroup='null', mAudioAttributes=AudioAttributes: usage=USAGE_NOTIFICATION content=CONTENT_TYPE_SONIFICATION flags=0x800 tags= bundle=null, mBlockableSystem=false, mAllowBubbles=-1, mImportanceLockedByOEM=false, mImportanceLockedDefaultApp=false, mOriginalImp=1, mParent=null, mConversationId=null, mDemoted=false, mImportantConvo=false}
+      mAdjustments=[]
+      shortcut=null found valid? false
+      mSuggestionsGeneratedByAssistant=false
+      
