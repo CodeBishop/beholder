@@ -1,4 +1,4 @@
-# beholder
+# Beholder
 A diagnostics viewer for monitoring Android apps
 
 ## Requirements
