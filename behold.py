@@ -88,7 +88,7 @@ def cursesMain(screen):
         if keypress in [ord('q'), ord('Q')]:
             exitFlag = True
 
-    time.sleep(0.5)  # Sleep for this many seconds to reduce CPU load
+        time.sleep(0.5)  # Sleep for this many seconds to reduce CPU load
 
 ############################################################################################
 #   Start of Program    ####################################################################
@@ -127,10 +127,8 @@ while not exitFlag:
         exitFlag = True
     else:
         tries += 1
-        print("TRYING")
-
         if tries >= timeoutAfterTries:
-            print("Could not find package name matching pattern '" + appIdSearchString + "'")
+            print("Timed out while waiting for package manager response")
             sys.exit(1)
         else:
             time.sleep(0.1)  # Sleep for this many seconds before checking again
