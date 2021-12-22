@@ -17,3 +17,7 @@ sudo ln -s ~+/behold.py /usr/local/bin/behold
 ```bash
 behold <package-name>
 ```
+
+## Other Directories
+
+The /tools directory contains experimental utilities that may be candidates for integration into Beholder
